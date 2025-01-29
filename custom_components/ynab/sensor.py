@@ -38,10 +38,10 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     for category in categories:
         sensors.append(YNABCategorySensor(hass, category, "balance"))
         sensors.append(YNABCategorySensor(hass, category, "budgeted"))
-        binary_sensors.append(YNABCategoryBinarySensor(hass, category))
+        # binary_sensors.append(YNABCategoryBinarySensor(hass, category))
 
     async_add_entities(sensors, True)
-    async_add_entities(binary_sensors, True)
+    # async_add_entities(binary_sensors, True)
 
 
 class YNABSensor(Entity):
