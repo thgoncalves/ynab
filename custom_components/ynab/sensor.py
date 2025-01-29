@@ -52,6 +52,7 @@ class YNABSensor(Entity):
         self._name = f"YNAB {name.replace('_', ' ').title()}"
         self._state = None
         self._data_key = name
+        self._measurement = "$"
 
     async def async_update(self):
         """Update the sensor."""
@@ -68,7 +69,7 @@ class YNABSensor(Entity):
 
     @property
     def unit_of_measurement(self):
-        return "$"
+        return self._measurement
 
     @property
     def icon(self):
@@ -84,6 +85,7 @@ class YNABCategorySensor(Entity):
         self._name = f"YNAB {category.replace('_', ' ').title()}"
         self._state = None
         self._category = category
+        self._measurement = "$"
 
     async def async_update(self):
         """Update the sensor."""
@@ -100,7 +102,7 @@ class YNABCategorySensor(Entity):
 
     @property
     def unit_of_measurement(self):
-        return "$"
+        return self._measurement
 
     @property
     def icon(self):
@@ -116,6 +118,7 @@ class YNABAccountSensor(Entity):
         self._name = f"YNAB Account {account.replace('_', ' ').title()}"
         self._state = None
         self._account = account
+        self._measurement = "$"
 
     async def async_update(self):
         """Update the sensor."""
@@ -132,7 +135,7 @@ class YNABAccountSensor(Entity):
 
     @property
     def unit_of_measurement(self):
-        return "$"
+        return self._measurement
 
     @property
     def icon(self):
