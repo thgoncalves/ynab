@@ -29,6 +29,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     for sensor_name in main_sensors:
         sensors.append(YNABSensor(hass, sensor_name))
 
+    _LOGGER.info(config)
     # Create category sensors separately
     categories = config["categories"]
     if categories is not None:
