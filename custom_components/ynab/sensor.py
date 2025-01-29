@@ -44,6 +44,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         for account in accounts:
             sensors.append(YNABAccountSensor(hass, account))
 
+    _LOGGER.info(f"####### {discovery_info}")
     async_add_entities(sensors, True)
 
 
