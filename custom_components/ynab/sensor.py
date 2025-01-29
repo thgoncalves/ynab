@@ -48,7 +48,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             )
 
     async_add_entities(sensors, True)
-    # async_add_entities(binary_sensors, True)
 
 
 class YNABSensor(Entity):

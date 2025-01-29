@@ -189,15 +189,15 @@ class YnabData:
         )
 
         # get accounts
-        for account in self.get_data.accounts:
-            if account.name not in self.accounts:
-                continue
-
-            self.hass.data[DOMAIN_DATA].update([(account.name, account.balance / 1000)])
-            _LOGGER.debug(
-                "Received data for account: %s",
-                [account.name, account.balance / 1000],
-            )
+        # for account in self.get_data.accounts:
+        #     if account.name not in self.accounts:
+        #         continue
+        #
+        #     self.hass.data[DOMAIN_DATA].update([(account.name, account.balance / 1000)])
+        #     _LOGGER.debug(
+        #         "Received data for account: %s",
+        #         [account.name, account.balance / 1000],
+        #     )
 
         # get current month data
         for month in self.get_data.months:
