@@ -32,6 +32,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     # Create category sensors separately
     categories = config.get("categories", [])
     for category in categories:
+        _LOGGER.info(f"Configured categories: {categories}")
         sensors.append(YNABCategorySensor(hass, category))
         sensors.append(YNABCategorySensor(hass, f"{category}_budgeted"))
 
