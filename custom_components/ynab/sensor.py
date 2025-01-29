@@ -27,20 +27,18 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     ]
 
     for sensor_name in main_sensors:
-        sensors.append(YNABSensor(hass, sensor_name, config["currency"]))
+        sensors.append(YNABSensor(hass, sensor_name))
 
     # Create category sensors separately
     categories = config.get("categories", [])
     for category in categories:
-        sensors.append(YNABCategorySensor(hass, category, config["currency"]))
-        sensors.append(
-            YNABCategorySensor(hass, f"{category}_budgeted", config["currency"])
-        )
+        sensors.append(YNABCategorySensor(hass, category))
+        sensors.append(YNABCategorySensor(hass, f"{category}_budgeted"))
 
     # Create account sensors
     accounts = config.get("accounts", [])
     for account in accounts:
-        sensors.append(YNABAccountSensor(hass, account, config["currency"]))
+        sensors.append(YNABAccountSensor(hass, account))
 
     async_add_entities(sensors, True)
 
@@ -48,12 +46,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 class YNABSensor(Entity):
     """General YNAB Sensor class for main metrics."""
 
-    def __init__(self, hass, name, currency):
+    def __init__(self, hass, name):
         """Initialize the sensor."""
         self.hass = hass
         self._name = f"YNAB {name.replace('_', ' ').title()}"
         self._state = None
-        self._measurement = currency
         self._data_key = name
 
     async def async_update(self):
@@ -81,12 +78,11 @@ class YNABSensor(Entity):
 class YNABCategorySensor(Entity):
     """Sensor for individual budget categories."""
 
-    def __init__(self, hass, category, currency):
+    def __init__(self, hass, category):
         """Initialize the sensor."""
         self.hass = hass
         self._name = f"YNAB {category.replace('_', ' ').title()}"
         self._state = None
-        self._measurement = currency
         self._category = category
 
     async def async_update(self):
@@ -114,12 +110,11 @@ class YNABCategorySensor(Entity):
 class YNABAccountSensor(Entity):
     """Sensor for individual accounts in YNAB."""
 
-    def __init__(self, hass, account, currency):
+    def __init__(self, hass, account):
         """Initialize the sensor."""
         self.hass = hass
         self._name = f"YNAB Account {account.replace('_', ' ').title()}"
         self._state = None
-        self._measurement = currency
         self._account = account
 
     async def async_update(self):
