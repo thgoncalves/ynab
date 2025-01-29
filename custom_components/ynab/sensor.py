@@ -1,8 +1,9 @@
 """Sensor platform for YNAB."""
 
 import logging
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity import Entity  # type: ignore
 
+#
 from .const import CATEGORY_ERROR, DOMAIN_DATA, ICON
 
 _LOGGER = logging.getLogger(__name__)

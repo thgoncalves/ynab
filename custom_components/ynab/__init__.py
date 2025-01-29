@@ -5,13 +5,13 @@ import logging
 import os
 from datetime import date, timedelta
 
-import aiohttp
-import homeassistant.helpers.config_validation as cv
-import voluptuous as vol
-from homeassistant.const import CONF_API_KEY
-from homeassistant.helpers import discovery
-from homeassistant.util import Throttle
-from ynab_sdk import YNAB
+import aiohttp  # type: ignore
+import homeassistant.helpers.config_validation as cv  # type: ignore
+import voluptuous as vol  # type: ignore
+from homeassistant.const import CONF_API_KEY  # type: ignore
+from homeassistant.helpers import discovery  # type: ignore
+from homeassistant.util import Throttle  # type: ignore
+from ynab_sdk import YNAB  # type: ignore
 
 from .const import (
     CONF_NAME,
@@ -134,7 +134,7 @@ class YnabData:
             for budget in self.get_all_budgets:
                 _LOGGER.debug("Budget name: %s - id: %s", budget.name, budget.id)
         else:
-            _LOGGER.errors("Unable to retrieve budgets summary")
+            _LOGGER.errors("Unable to retrieve budgets summary")  # type: ignore
 
         self.get_data = self.raw_budget.data.budget
         _LOGGER.debug("Retrieving data from budget id: %s", self.get_data.id)
