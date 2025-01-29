@@ -16,25 +16,33 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     # Fetch YNAB data
     await hass.data[DOMAIN_DATA]["client"].update_data()
 
-    # Create main budget sensors
-    main_sensors = [
-        "budgeted_this_month",
-        "activity_this_month",
-        "age_of_money",
-        "total_balance",
-        "need_approval",
-        "uncleared_transactions",
-        "overspent_categories",
-    ]
+    # # Create main budget sensors
+    # main_sensors = [
+    #     "budgeted_this_month",
+    #     "activity_this_month",
+    #     "age_of_money",
+    #     "total_balance",
+    #     "need_approval",
+    #     "uncleared_transactions",
+    #     "overspent_categories",
+    # ]
 
-    for sensor_name in main_sensors:
-        sensors.append(YNABSensor(hass, sensor_name))
+    # for sensor_name in main_sensors:
+    #     sensors.append(YNABSensor(hass, sensor_name))
 
     _LOGGER.info(f"## DOMAIN DATA: {hass.data[DOMAIN_DATA]}")
 
-    # sensors.append(YNABCategorySensor(hass, category, "balance"))
-    # sensors.append(YNABCategorySensor(hass, category, "budgeted"))
-    # binary_sensors.append(YNABCategoryBinarySensor(hass, category))
+    categories = hass.data[DOMAIN_DATA]["categories"]
+    if categories is not None:
+        for category in categories:
+            category_name, values = next(iter(category.items()))
+            balance = values["balance"]
+            budgeted = values["budgeted"]
+
+            sensors.append(YNABCategorySensor(hass, category_name, balance, "balance"))
+            sensors.append(
+                YNABCategorySensor(hass, category_name, budgeted, "budgeted")
+            )
 
     async_add_entities(sensors, True)
     # async_add_entities(binary_sensors, True)
@@ -76,20 +84,24 @@ class YNABSensor(Entity):
 class YNABCategorySensor(Entity):
     """Sensor for individual budget categories."""
 
-    def __init__(self, hass, category, metric):
+    def __init__(self, hass, category_name, state, category_type):
         """Initialize the sensor."""
         self.hass = hass
-        self._name = f"YNAB {category.replace('_', ' ').title()} {metric.title()}"
-        self._state = None
-        self._category = category
-        self._metric = metric
+        self._name = (
+            f"YNAB {category_name.replace('_', ' ').title()} {category_type.title()}"
+        )
+        self._state = state
+        self._category = category_name
+        self._type = category_type
         self._measurement = "$"
 
     async def async_update(self):
         """Update the sensor."""
         await self.hass.data[DOMAIN_DATA]["client"].update_data()
-        category_data = self.hass.data[DOMAIN_DATA].get(self._category, {})
-        self._state = category_data.get(self._metric)
+        category_data = self.hass.data[DOMAIN_DATA]["categories"].get(
+            self._category_name
+        )
+        self._state = category_data.get(self._type)
 
     @property
     def name(self):
