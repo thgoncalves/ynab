@@ -94,7 +94,7 @@ class YNABCategorySensor(Entity):
             f"YNAB {category_name.replace('_', ' ').title()} {category_type.title()}"
         )
         self._state = state
-        self._category = category_name
+        self._category_name = category_name
         self._type = category_type
         self._measurement = "$"
 
