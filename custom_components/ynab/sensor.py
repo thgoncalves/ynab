@@ -1,7 +1,7 @@
 """Sensor platform for YNAB."""
 
 import logging
-from homeassistant.helpers.entity import Entity, BinarySensorEntity
+from homeassistant.helpers.entity import Entity
 
 from .const import CATEGORY_ERROR, DOMAIN_DATA, ICON
 
