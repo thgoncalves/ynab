@@ -239,7 +239,7 @@ class YnabData:
                 overspent_categories,
             )
 
-            category_list = []
+            category_list = {}
 
             # get remaining category balances
             for category in month.categories:
@@ -256,14 +256,10 @@ class YnabData:
                     "Received data for categories: %s",
                     [category.name, category.balance / 1000, category.budgeted / 1000],
                 )
-                category_list.append(
-                    {
-                        category.name: {
-                            "balance": category.balance / 1000,
-                            "budgeted": category.budgeted / 1000,
-                        }
-                    }
-                )
+                category_list[category.name] = {
+                    "balance": category.balance / 1000,
+                    "budgeted": category.budgeted / 1000,
+                }
 
             self.hass.data[DOMAIN_DATA]["categories"] = category_list
 

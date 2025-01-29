@@ -35,10 +35,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     categories = hass.data[DOMAIN_DATA]["categories"]
     if categories is not None:
-        for category in categories:
-            category_name, values = next(iter(category.items()))
+        for category_name, values in categories.items():
             balance = values["balance"]
             budgeted = values["budgeted"]
+            print(
+                f"Category: {category_name}, Balance: {balance}, Budgeted: {budgeted}"
+            )
 
             sensors.append(YNABCategorySensor(hass, category_name, balance, "balance"))
             sensors.append(
