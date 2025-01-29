@@ -112,37 +112,37 @@ class YNABCategorySensor(Entity):
         return ICON
 
 
-class YNABCategoryBinarySensor(BinarySensorEntity):
-    """Binary sensor for budget category overspending."""
-
-    def __init__(self, hass, category):
-        """Initialize the sensor."""
-        self.hass = hass
-        self._name = f"YNAB {category.replace('_', ' ').title()} Overspend"
-        self._state = None
-        self._category = category
-        self._device_class = "problem"
-
-    async def async_update(self):
-        """Update the sensor."""
-        await self.hass.data[DOMAIN_DATA]["client"].update_data()
-        category_data = self.hass.data[DOMAIN_DATA].get(self._category, {})
-        balance = category_data.get("balance", 0)
-        budgeted = category_data.get("budgeted", 0)
-        self._state = balance > budgeted
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def is_on(self):
-        return self._state
-
-    @property
-    def device_class(self):
-        return self._device_class
-
-    @property
-    def icon(self):
-        return ICON
+# class YNABCategoryBinarySensor(BinarySensorEntity):
+#     """Binary sensor for budget category overspending."""
+#
+#     def __init__(self, hass, category):
+#         """Initialize the sensor."""
+#         self.hass = hass
+#         self._name = f"YNAB {category.replace('_', ' ').title()} Overspend"
+#         self._state = None
+#         self._category = category
+#         self._device_class = "problem"
+#
+#     async def async_update(self):
+#         """Update the sensor."""
+#         await self.hass.data[DOMAIN_DATA]["client"].update_data()
+#         category_data = self.hass.data[DOMAIN_DATA].get(self._category, {})
+#         balance = category_data.get("balance", 0)
+#         budgeted = category_data.get("budgeted", 0)
+#         self._state = balance > budgeted
+#
+#     @property
+#     def name(self):
+#         return self._name
+#
+#     @property
+#     def is_on(self):
+#         return self._state
+#
+#     @property
+#     def device_class(self):
+#         return self._device_class
+#
+#     @property
+#     def icon(self):
+#         return ICON
