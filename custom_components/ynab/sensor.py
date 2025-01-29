@@ -30,15 +30,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     for sensor_name in main_sensors:
         sensors.append(YNABSensor(hass, sensor_name))
 
-    _LOGGER.info(f"## DOMAIN: {hass.data[DOMAIN_DATA]}")
+    _LOGGER.info(f"## DOMAIN DATA: {hass.data[DOMAIN_DATA]}")
 
-    # Create category sensors separately
-    categories = hass.data[DOMAIN_DATA].get("categories", [])
-
-    for category in categories:
-        sensors.append(YNABCategorySensor(hass, category, "balance"))
-        sensors.append(YNABCategorySensor(hass, category, "budgeted"))
-        # binary_sensors.append(YNABCategoryBinarySensor(hass, category))
+    # sensors.append(YNABCategorySensor(hass, category, "balance"))
+    # sensors.append(YNABCategorySensor(hass, category, "budgeted"))
+    # binary_sensors.append(YNABCategoryBinarySensor(hass, category))
 
     async_add_entities(sensors, True)
     # async_add_entities(binary_sensors, True)
