@@ -3,7 +3,7 @@
 DOMAIN = "ynab"
 DOMAIN_DATA = f"{DOMAIN}_data"
 
-PLATFORMS = ["sensor", "binary_sensor"]
+PLATFORMS = ["sensor"]
 REQUIRED_FILES = ["const.py", "manifest.json", "sensor.py"]
 VERSION = "0.3.0"
 ISSUE_URL = "https://github.com/wxt9861/ynab/issues"
