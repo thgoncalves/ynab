@@ -17,19 +17,19 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     # Fetch YNAB data
     await hass.data[DOMAIN_DATA]["client"].update_data()
 
-    # # Create main budget sensors
-    # main_sensors = [
-    #     "budgeted_this_month",
-    #     "activity_this_month",
-    #     "age_of_money",
-    #     "total_balance",
-    #     "need_approval",
-    #     "uncleared_transactions",
-    #     "overspent_categories",
-    # ]
+    # Create main budget sensors
+    main_sensors = [
+        "budgeted_this_month",
+        "activity_this_month",
+        "age_of_money",
+        "total_balance",
+        "need_approval",
+        "uncleared_transactions",
+        "overspent_categories",
+    ]
 
-    # for sensor_name in main_sensors:
-    #     sensors.append(YNABSensor(hass, sensor_name))
+    for sensor_name in main_sensors:
+        sensors.append(YNABSensor(hass, sensor_name))
 
     _LOGGER.info(f"## DOMAIN DATA: {hass.data[DOMAIN_DATA]}")
 
@@ -90,9 +90,7 @@ class YNABCategorySensor(Entity):
     def __init__(self, hass, category_name, state, category_type):
         """Initialize the sensor."""
         self.hass = hass
-        self._name = (
-            f"YNAB {category_name.replace('_', ' ').title()} {category_type.title()}"
-        )
+        self._name = f"YNAB Category {category_name.replace('_', ' ').title()} {category_type.title()}"
         self._state = state
         self._category_name = category_name
         self._type = category_type
@@ -100,17 +98,11 @@ class YNABCategorySensor(Entity):
 
     async def async_update(self):
         """Update the sensor."""
-        _LOGGER.info(self._category_name)
         await self.hass.data[DOMAIN_DATA]["client"].update_data()
         category_data = self.hass.data[DOMAIN_DATA]["categories"].get(
             self._category_name
         )
-        _LOGGER.info("####")
-        _LOGGER.info(category_data)
         self._state = category_data.get(self._type)
-        _LOGGER.info(
-            f"Category: {self._category_name} | Type: {self._type} | State: {self._state}"
-        )
 
     @property
     def name(self):
