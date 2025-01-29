@@ -102,7 +102,12 @@ class YNABCategorySensor(Entity):
         category_data = self.hass.data[DOMAIN_DATA]["categories"].get(
             self._category_name
         )
+        _LOGGER.info("####")
+        _LOGGER.info(category_data)
         self._state = category_data.get(self._type)
+        _LOGGER.info(
+            f"Category: {self._category_name} | Type: {self._type} | State: {self._state}"
+        )
 
     @property
     def name(self):
