@@ -1,9 +1,9 @@
-"""Sensor platform for ynab."""
+"""Sensor platform for YNAB."""
 
 import logging
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity import Entity, BinarySensorEntity
 
-from .const import ACCOUNT_ERROR, CATEGORY_ERROR, DOMAIN_DATA, ICON
+from .const import CATEGORY_ERROR, DOMAIN_DATA, ICON
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -11,8 +11,8 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up sensor platform."""
     sensors = []
+    binary_sensors = []
 
-    _LOGGER.info(f"####### {discovery_info}")
     # Fetch YNAB data
     await hass.data[DOMAIN_DATA]["client"].update_data()
 
@@ -31,21 +31,16 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         sensors.append(YNABSensor(hass, sensor_name))
 
     _LOGGER.info(config)
-    # Create category sensors separately
-    categories = config["categories"]
-    if categories is not None:
-        for category in categories:
-            _LOGGER.info(f"Configured categories: {categories}")
-            sensors.append(YNABCategorySensor(hass, category))
-            sensors.append(YNABCategorySensor(hass, f"{category}_budgeted"))
 
-    # Create account sensors
-    accounts = config["accounts"]
-    if accounts is not None:
-        for account in accounts:
-            sensors.append(YNABAccountSensor(hass, account))
+    # Create category sensors separately
+    categories = hass.data[DOMAIN_DATA].get("categories", [])
+    for category in categories:
+        sensors.append(YNABCategorySensor(hass, category, "balance"))
+        sensors.append(YNABCategorySensor(hass, category, "budgeted"))
+        binary_sensors.append(YNABCategoryBinarySensor(hass, category))
 
     async_add_entities(sensors, True)
+    async_add_entities(binary_sensors, True)
 
 
 class YNABSensor(Entity):
@@ -84,18 +79,20 @@ class YNABSensor(Entity):
 class YNABCategorySensor(Entity):
     """Sensor for individual budget categories."""
 
-    def __init__(self, hass, category):
+    def __init__(self, hass, category, metric):
         """Initialize the sensor."""
         self.hass = hass
-        self._name = f"YNAB {category.replace('_', ' ').title()}"
+        self._name = f"YNAB {category.replace('_', ' ').title()} {metric.title()}"
         self._state = None
         self._category = category
+        self._metric = metric
         self._measurement = "$"
 
     async def async_update(self):
         """Update the sensor."""
         await self.hass.data[DOMAIN_DATA]["client"].update_data()
-        self._state = self.hass.data[DOMAIN_DATA].get(self._category)
+        category_data = self.hass.data[DOMAIN_DATA].get(self._category, {})
+        self._state = category_data.get(self._metric)
 
     @property
     def name(self):
@@ -114,33 +111,36 @@ class YNABCategorySensor(Entity):
         return ICON
 
 
-class YNABAccountSensor(Entity):
-    """Sensor for individual accounts in YNAB."""
+class YNABCategoryBinarySensor(BinarySensorEntity):
+    """Binary sensor for budget category overspending."""
 
-    def __init__(self, hass, account):
+    def __init__(self, hass, category):
         """Initialize the sensor."""
         self.hass = hass
-        self._name = f"YNAB Account {account.replace('_', ' ').title()}"
+        self._name = f"YNAB {category.replace('_', ' ').title()} Overspend"
         self._state = None
-        self._account = account
-        self._measurement = "$"
+        self._category = category
+        self._device_class = "problem"
 
     async def async_update(self):
         """Update the sensor."""
         await self.hass.data[DOMAIN_DATA]["client"].update_data()
-        self._state = self.hass.data[DOMAIN_DATA].get(self._account)
+        category_data = self.hass.data[DOMAIN_DATA].get(self._category, {})
+        balance = category_data.get("balance", 0)
+        budgeted = category_data.get("budgeted", 0)
+        self._state = balance > budgeted
 
     @property
     def name(self):
         return self._name
 
     @property
-    def state(self):
+    def is_on(self):
         return self._state
 
     @property
-    def unit_of_measurement(self):
-        return self._measurement
+    def device_class(self):
+        return self._device_class
 
     @property
     def icon(self):
