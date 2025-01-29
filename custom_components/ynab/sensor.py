@@ -30,16 +30,18 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         sensors.append(YNABSensor(hass, sensor_name))
 
     # Create category sensors separately
-    categories = config.get("categories", [])
-    for category in categories:
-        _LOGGER.info(f"Configured categories: {categories}")
-        sensors.append(YNABCategorySensor(hass, category))
-        sensors.append(YNABCategorySensor(hass, f"{category}_budgeted"))
+    categories = config["categories"]
+    if categories is not None:
+        for category in categories:
+            _LOGGER.info(f"Configured categories: {categories}")
+            sensors.append(YNABCategorySensor(hass, category))
+            sensors.append(YNABCategorySensor(hass, f"{category}_budgeted"))
 
     # Create account sensors
-    accounts = config.get("accounts", [])
-    for account in accounts:
-        sensors.append(YNABAccountSensor(hass, account))
+    accounts = config["accounts"]
+    if accounts is not None:
+        for account in accounts:
+            sensors.append(YNABAccountSensor(hass, account))
 
     async_add_entities(sensors, True)
 
