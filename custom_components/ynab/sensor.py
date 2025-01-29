@@ -100,6 +100,7 @@ class YNABCategorySensor(Entity):
 
     async def async_update(self):
         """Update the sensor."""
+        _LOGGER.info(self._category_name)
         await self.hass.data[DOMAIN_DATA]["client"].update_data()
         category_data = self.hass.data[DOMAIN_DATA]["categories"].get(
             self._category_name
