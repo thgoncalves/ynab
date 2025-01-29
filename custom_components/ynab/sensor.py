@@ -68,7 +68,7 @@ class YNABSensor(Entity):
 
     @property
     def unit_of_measurement(self):
-        return self._measurement
+        return "$"
 
     @property
     def icon(self):
@@ -100,7 +100,7 @@ class YNABCategorySensor(Entity):
 
     @property
     def unit_of_measurement(self):
-        return self._measurement
+        return "$"
 
     @property
     def icon(self):
@@ -132,7 +132,7 @@ class YNABAccountSensor(Entity):
 
     @property
     def unit_of_measurement(self):
-        return self._measurement
+        return "$"
 
     @property
     def icon(self):
