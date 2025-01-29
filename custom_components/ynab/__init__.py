@@ -256,7 +256,9 @@ class YnabData:
                     "Received data for categories: %s",
                     [category.name, category.balance / 1000, category.budgeted / 1000],
                 )
-
+                category_list.append(
+                    [category.name, category.balance / 1000, category.budgeted / 1000]
+                )
             self.hass.data[DOMAIN_DATA]["categories"] = category_list
 
     async def request_import(self):
